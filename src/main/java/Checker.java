@@ -1,9 +1,14 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 public class Checker {
+
+    public static Logger logger = LoggerFactory.getLogger("Checker");
 
     private static final String CAUSE = "dp";
     private static final String USER = "uid";
@@ -37,7 +42,7 @@ public class Checker {
         for (String key: params.keySet())  {
             String paramVal = params.get(key);
             if (paramVal.contains(detailStr))   {
-                System.out.println("found: "+detailStr+" inside "+key+"="+paramVal);
+                logger.info("found: "+detailStr+" inside "+key+"="+paramVal);
             }
         }
     }
@@ -87,7 +92,9 @@ public class Checker {
 
     public void printParams() {
         for (String paramName: this.params.keySet()) {
-            System.out.println(paramName+"="+params.get(paramName));
+
+            String value = params.get(paramName);
+            logger.info(paramName + "=" + value);
         }
     }
 
@@ -97,5 +104,13 @@ public class Checker {
 
     public String getEventCategory() {
         return this.params.get("ec");
+    }
+
+    public boolean hasParams()  {
+        return params!=null && params.size()>0;
+    }
+
+    public String getUrl() {
+        return this.uri;
     }
 }

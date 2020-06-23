@@ -1,10 +1,10 @@
+import org.apache.commons.io.input.BOMInputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 public class JSONUtils {
@@ -14,11 +14,22 @@ public class JSONUtils {
     }
 
     static Iterator<JSONObject> getEntriesIterator(String requestFileName, JSONParser parser) throws IOException, ParseException {
-        Object obj = parser.parse(new FileReader(requestFileName));
+        InputStream is = skipBom(requestFileName);
+        Object obj = parser.parse(new InputStreamReader(is));
 
         JSONObject jsonObject = (JSONObject) obj;
 
         JSONArray entries = getEntries(jsonObject);
         return (Iterator<JSONObject>) entries.iterator();
+    }
+
+    private static InputStream skipBom (String requestFileName) throws IOException {
+        InputStream in = new FileInputStream(requestFileName);
+        BOMInputStream bomIn = new BOMInputStream(in);
+        if (bomIn.hasBOM()) {
+
+        }
+
+        return bomIn;
     }
 }

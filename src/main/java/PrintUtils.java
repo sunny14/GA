@@ -1,13 +1,16 @@
-import java.util.HashMap;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 public class PrintUtils {
 
-    static void printDomainsStatistics(List<Checker> filteredUrls, int count) {
-        String message = "Processed: "+count+" requests\nFound "+filteredUrls.size()+" requests to 3-party:";
+    public static Logger logger = LoggerFactory.getLogger("PrintUtils");
+
+    static void printDomainsStatistics(Map<String, Integer> filteredUrls, int totalCount) {
+        String message = "Processed: "+totalCount+" requests\nFound "+filteredUrls.size()+" requests to 3-party:";
         printBigMessage(message);
-        Map<String, Integer> countMap = new HashMap<>();
+
+       /* Map<String, Integer> countMap = new HashMap<>();
         for (Checker ch: filteredUrls)  {
             Integer currentCount = countMap.get(ch.getDomain());
             if (currentCount != null) {
@@ -16,18 +19,18 @@ public class PrintUtils {
             else {
                 countMap.put(ch.getDomain(), 1);
             }
+        }*/
+
+        for (String domain: filteredUrls.keySet())  {
+            logger.info(filteredUrls.get(domain)+" times:\n"+domain);
         }
 
-        for (String domain: countMap.keySet())  {
-            System.out.println(countMap.get(domain)+" times:\n"+domain);
-        }
-
-        System.out.println("\n");
+        logger.info("\n");
     }
 
     public static void printBigMessage(String message) {
-        System.out.println("\n*********************************************************");
-        System.out.println(message);
-        System.out.println("*********************************************************\n");
+        logger.info("\n*********************************************************");
+        logger.info(message);
+        logger.info("*********************************************************\n");
     }
 }
